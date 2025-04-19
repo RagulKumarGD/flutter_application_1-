@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:78166270226:android:3e0fcba44c0cb5202513cb',
     messagingSenderId: '78166270226',
     projectId: 'crud-1bb79',
-    storageBucket: 'crud-1bb79.appspot.com',
+    storageBucket: 'crud-1bb79.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +62,8 @@ class DefaultFirebaseOptions {
     appId: '1:78166270226:ios:0d20b2617e8693852513cb',
     messagingSenderId: '78166270226',
     projectId: 'crud-1bb79',
-    storageBucket: 'crud-1bb79.appspot.com',
+    storageBucket: 'crud-1bb79.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
+
 }

@@ -16,3 +16,35 @@ class FirestoreService {
 
 
 }
+class UserService {
+  final CollectionReference notes =
+      FirebaseFirestore.instance.collection('temperature');
+
+  Future<void> addNotes(String note) {
+    return notes.add({'note': note, 'timestamp': Timestamp.now()});
+  }
+
+  Stream<QuerySnapshot> getnotesstream() {
+   
+    final notesteam = notes.orderBy('timestamp', descending: true).limit(10).snapshots();
+    return notesteam;
+  }
+
+
+}
+class Uservice {
+  final CollectionReference notes =
+      FirebaseFirestore.instance.collection('humidity');
+
+  Future<void> addNotes(String note) {
+    return notes.add({'note': note, 'timestamp': Timestamp.now()});
+  }
+
+   Stream<QuerySnapshot> getnotesstream() {
+   
+    final notesteam = notes.orderBy('timestamp', descending: true).limit(10).snapshots();
+    return notesteam;
+  }
+
+}
+

@@ -1,24 +1,41 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/auth_page.dart';
-import 'package:flutter_application_1/controller.dart';
-// import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/homepage.dart';
 import 'package:flutter_application_1/monitoring.dart';
 import 'package:flutter_application_1/smarthome.dart';
 import 'package:flutter_application_1/ttspage.dart';
+import 'package:http/http.dart' as http;
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+import 'login.dart';
+
+class Controller extends StatefulWidget {
+  const Controller({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Controller> createState() => _ControllerState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _ControllerState extends State<Controller> {
   void signout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => AuthPage()));
+        context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  final String esp32Ip = 'http://192.168.139.54:8080/hi';
+  Future<void> send(String data) async {
+    try {
+      // Send a GET request with a "message" parameter
+      final response = await http.get(Uri.parse('$esp32Ip?message=$data'));
+      print(response.body);
+      if (response.statusCode == 200) {
+        print('Received response: ${response.body}');
+      } else {
+        print('Failed to send message');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -26,8 +43,7 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: const Icon(Icons.wifi),
-        centerTitle: true,
+        title: const Text("Controlling"),
         backgroundColor: Colors.grey[400],
         foregroundColor: Colors.black,
       ),
@@ -99,72 +115,81 @@ class _HomepageState extends State<Homepage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TtsPage())),
-                    child: Container(
-                        child: Text(
-                          "Gesture Monitoring",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        height: 150,
-                        width: 150,
-                        alignment: (Alignment.center),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[800],
-                            borderRadius: BorderRadius.circular(10)))),
-                GestureDetector(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Monitoring())),
-                    child: Container(
-                        child: Text(
-                          "Monitoring",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        height: 150,
-                        width: 150,
-                        alignment: (Alignment.center),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[800],
-                            borderRadius: BorderRadius.circular(10)))),
+                  onTap: () => send("North"),
+                  child: Container(
+                    child: Icon(Icons.north),
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                )
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Controller())),
+                  onTap: () => send("West"),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 50.0),
                     child: Container(
-                        child: Text(
-                          "Controller",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        height: 150,
-                        width: 150,
-                        alignment: (Alignment.center),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[800],
-                            borderRadius: BorderRadius.circular(10)))),
+                      child: Icon(Icons.west),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                ),
                 GestureDetector(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Smarthome())),
+                  onTap: () => send("Stop"),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50.0, bottom: 50),
                     child: Container(
-                        child: Text(
-                          "Smart Home",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        height: 150,
-                        width: 150,
-                        alignment: (Alignment.center),
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[800],
-                            borderRadius: BorderRadius.circular(10))))
+                      child: Icon(Icons.stop),
+                      height: 90,
+                      width: 90,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => send("East"),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50.0),
+                    child: Container(
+                      child: Icon(Icons.east),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                )
               ],
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => send("South"),
+                  child: Container(
+                    child: Icon(Icons.south),
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
       ),
